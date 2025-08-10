@@ -9,6 +9,15 @@ public class Customer {
     private String email;
     private String phone;
     private Date registryDate;
+    private Bank bank;
+
+    public Bank getBank() {
+        return bank;
+    }
+
+    public void setBank(Bank bank) {
+        this.bank = bank;
+    }
 
     public Long getId() {
         return id;

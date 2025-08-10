@@ -11,6 +11,15 @@ public class Account {
     private CompteType compteType;
     private Date openingDate;
     private String status;
+    private Customer customer;
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 
     public Long getId() {
         return id;

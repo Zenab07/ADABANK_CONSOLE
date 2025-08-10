@@ -1,10 +1,9 @@
 create table bank (
 	id SERIAL PRIMARY KEY,
-	name VARCHAR(100) NOT NULL,
+	name VARCHAR(100) NOT NULL UNIQUE,
 	country VARCHAR(100) NOT NULL,
 	city VARCHAR(100) NOT NULL,
-	creationdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    numberofcustomers INT NOT NULL
+	creationdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 create table customer(
@@ -20,7 +19,7 @@ create table customer(
 
 create table account(
 	id SERIAL PRIMARY KEY,
-	comptenumber INT NOT NULL,
+	comptenumber INT NOT NULL UNIQUE,
 	balance DECIMAL(15,2) NOT NULL DEFAULT 0.00,
 	comptetype VARCHAR(100) NOT NULL,
 	idCustomer BIGINT NOT NULL UNIQUE,
@@ -29,7 +28,7 @@ create table account(
 	FOREIGN KEY (idCustomer) REFERENCES customer(id)
 );
 
-create table tansaction(
+create table transaction(
 	id SERIAL PRIMARY KEY,
 	amount DECIMAL(15,2) NOT NULL DEFAULT 0.00,
 	transactiontype VARCHAR(100) NOT NULL,

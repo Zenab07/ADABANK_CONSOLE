@@ -10,6 +10,15 @@ public class Transaction {
     private TransactionType transactionType;
     private Date transactionDate;
     private String description;
+    private Account accoount;
+
+    public Account getAccount() {
+        return accoount;
+    }
+
+    public void setAccoount(Account accoount) {
+        this.accoount = accoount;
+    }
 
     public Long getId() {
         return id;
