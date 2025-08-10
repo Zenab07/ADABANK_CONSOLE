@@ -1,0 +1,40 @@
+create table bank (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(100) NOT NULL,
+	country VARCHAR(100) NOT NULL,
+	city VARCHAR(100) NOT NULL,
+	creationdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    numberofcustomers INT NOT NULL
+);
+
+create table customer(
+	id SERIAL PRIMARY KEY,
+	firstname VARCHAR(100) NOT NULL,
+	lastname VARCHAR(100) NOT NULL,
+	email VARCHAR(100) NOT NULL,
+	phone VARCHAR(100) NOT NULL,
+	idBank BIGINT NOT NULL,
+	registrydate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (idBank) REFERENCES bank(id)
+);
+
+create table account(
+	id SERIAL PRIMARY KEY,
+	comptenumber INT NOT NULL,
+	balance DECIMAL(15,2) NOT NULL DEFAULT 0.00,
+	comptetype VARCHAR(100) NOT NULL,
+	idCustomer BIGINT NOT NULL UNIQUE,
+	openingdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	status VARCHAR(100) NOT NULL,
+	FOREIGN KEY (idCustomer) REFERENCES customer(id)
+);
+
+create table tansaction(
+	id SERIAL PRIMARY KEY,
+	amount DECIMAL(15,2) NOT NULL DEFAULT 0.00,
+	transactiontype VARCHAR(100) NOT NULL,
+	idAccount BIGINT NOT NULL,
+	transactiondate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	description VARCHAR(100) NOT NULL,
+	FOREIGN KEY (idAccount) REFERENCES account(id)
+);
