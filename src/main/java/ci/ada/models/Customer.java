@@ -12,8 +12,6 @@ import java.util.Date;
  * Cette classe inclut un pattern Builder interne pour
  * simplifier la création d'instances de {@link Customer}.
  *
- * @author MZ
- * @version 1.0
  */
 public class Customer {
 

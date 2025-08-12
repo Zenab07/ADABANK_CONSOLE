@@ -12,8 +12,6 @@ import java.util.Date;
  * Elle utilise un pattern Builder interne pour faciliter
  * la création d'instances de manière fluide.
  *
- * @author MZ
- * @version 1.0
  */
 public class Bank {
 

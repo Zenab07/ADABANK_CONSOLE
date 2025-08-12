@@ -7,12 +7,10 @@ import java.util.Date;
  * Représente une transaction financière dans le système ADABANK.
  * <p>
  * Une transaction est liée à un compte {@link Account} et peut correspondre
- * à différentes opérations : dépôt, retrait, transfert, etc.
+ * à différentes opérations : dépôt, retrait, virement
  * Chaque transaction contient un montant, un type, une date et une description.
  * </p>
  *
- * @author MZ
- * @version 1.0
  */
 public class Transaction {
 
