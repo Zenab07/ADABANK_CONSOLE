@@ -1,6 +1,7 @@
 package ci.ada.dao;
 
 import ci.ada.models.Bank;
+import ci.ada.singleton.ConnexionDB;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -8,19 +9,16 @@ import java.util.List;
 
 public class BankDao {
     private final static String INSERT = "INSERT INTO bank (name, country, city, creationdate) VALUES (?, ?, ?, ?)";
-    private final static String UPDATE_BY_NAME = "UPDATE bank SET name=?, country=?, city=?, creationdate=? WHERE name=?";
+    /*private final static String UPDATE_BY_NAME = "UPDATE bank SET name=?, country=?, city=?, creationdate=? WHERE name=?";
     private final static String DELETE_BY_NAME = "DELETE FROM bank WHERE name=?";
     private final static String READ_BY_NAME = "SELECT * FROM bank WHERE name=?";
     private final static String READ_BY_ID = "SELECT * FROM bank WHERE id=?";
-    private final static String EXIST_NAME = "SELECT 1 FROM bank WHERE name=?";
+    private final static String EXIST_NAME = "SELECT 1 FROM bank WHERE name=?";*/
     private final static String TOP_15_BANKS_BY_CLIENTS = "SELECT b.id, b.name, b.country, b.city, COUNT(c.id) AS client_count " + "FROM bank b " + "LEFT JOIN customer c ON c.idBank = b.id " + "GROUP BY b.id " + "ORDER BY client_count DESC " + "LIMIT 15";
 
-    private final String url = "jdbc:postgresql://localhost:5432/adabank_db?currentSchema=public&sslmode=disable";
-    private final String user = "postgres";
-    private final String password = "password";
 
     public Bank createBank(Bank bank) {
-        try (Connection connection = DriverManager.getConnection(url, user, password);
+        try (Connection connection = ConnexionDB.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setString(1, bank.getName());
@@ -35,14 +33,14 @@ public class BankDao {
 
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
-                throw new SQLException("Creating bank failed, no rows affected.");
+                throw new SQLException("Echec");
             }
 
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     bank.setId(generatedKeys.getLong(1));
                 } else {
-                    throw new SQLException("Creating bank failed, no ID obtained.");
+                    throw new SQLException("EChec");
                 }
             }
 
@@ -55,7 +53,7 @@ public class BankDao {
 
     public List<Bank> getTop15BanksByClientCount() {
         List<Bank> banks = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(url, user, password);
+        try (Connection connection = ConnexionDB.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(TOP_15_BANKS_BY_CLIENTS);
              ResultSet rs = stmt.executeQuery()) {
 
@@ -91,7 +89,7 @@ public class BankDao {
             params.add("%" + city.trim() + "%");
         }
 
-        try (Connection connection = DriverManager.getConnection(url, user, password);
+        try (Connection connection = ConnexionDB.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
 
             // Remplissage des paramètres
@@ -115,5 +113,27 @@ public class BankDao {
         }
         return banks;
     }
+
+    public Bank findByName(String name) {
+        String sql = "SELECT * FROM bank WHERE name = ?";
+        try (Connection con = ConnexionDB.getInstance().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, name);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Bank bank = new Bank();
+                    bank.setId(rs.getLong("id"));
+                    bank.setName(rs.getString("name"));
+                    bank.setCountry(rs.getString("country"));
+                    bank.setCity(rs.getString("city"));
+                    return bank;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
 }

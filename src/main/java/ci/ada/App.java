@@ -1,31 +1,47 @@
 package ci.ada;
 
+import ci.ada.interfaces.InterfaceGestionBanque;
+import ci.ada.interfaces.InterfaceGestionClient;
+import ci.ada.interfaces.InterfaceGestionCompte;
+import ci.ada.interfaces.InterfaceGestionTransaction;
 import ci.ada.services.*;
-import ci.ada.dao.*;
-import ci.ada.models.Bank;
 
-import java.util.List;
 import java.util.Scanner;
 
 
 public class App
 {
+    private static final String ADMIN_LOGIN = "admin";
+    private static final String ADMIN_PASSWORD = "admin123";
+
     public static void main( String[] args )
     {
         Scanner saisie = new Scanner(System.in);
         BankService bankService = new BankService();
 
+        CustomerService customerService = new CustomerService();
+        InterfaceGestionBanque interfaceGestionBanque = new InterfaceGestionBanque(saisie, bankService);
+        InterfaceGestionClient interfaceGestionClient = new InterfaceGestionClient(saisie, customerService, bankService);
+        InterfaceGestionCompte interfaceGestionCompte = new InterfaceGestionCompte();
+        InterfaceGestionTransaction interfaceGestionTransaction = new InterfaceGestionTransaction();
+
+
         System.out.println("\t********************************************************************************************");
         System.out.println("\t*                               BIENVENUE SUR ADABANK                                      *");
         System.out.println("\t********************************************************************************************");
+
+        while (!loginAdmin(saisie)) {
+            System.out.println(" Identifiants incorrects. Veuillez réessayer.\n");
+        }
 
         while (true) {
             System.out.println("\n\t##########################################");
             System.out.println("\t#              MENU PRINCIPAL            #");
             System.out.println("\t##########################################");
-            System.out.println("\t# 1. Inscription                         #");
-            System.out.println("\t# 2. Connexion                           #");
-            System.out.println("\t# 3. Gestion des banques                 #");
+            System.out.println("\t# 1. Gestion des banques                 #");
+            System.out.println("\t# 2. Gestion des clients                 #");
+            System.out.println("\t# 3. Gestion des comptes                 #");
+            System.out.println("\t# 4. Gestion des transactions            #");
             System.out.println("\t# 0. Quitter                             #");
             System.out.println("\t##########################################");
             System.out.print("Votre choix : ");
@@ -35,17 +51,19 @@ public class App
 
             switch (choix) {
                 case 1:
-                    // registrationService.registerUser(saisie);
-                    System.out.println("Fonction inscription non implémentée ici.");
+                    interfaceGestionBanque.menu();
                     break;
 
                 case 2:
-                    // loginService.login(saisie);
-                    System.out.println("Fonction connexion non implémentée ici.");
+                    interfaceGestionClient.menu();
                     break;
 
                 case 3:
-                    gestionBanquesMenu(saisie, bankService);
+                    interfaceGestionCompte.menu(saisie);
+                    break;
+
+                case 4:
+                    interfaceGestionTransaction.menu(saisie);
                     break;
 
                 case 0:
@@ -59,7 +77,27 @@ public class App
         }
     }
 
-    private static void gestionBanquesMenu(Scanner saisie, BankService bankService) {
+    private static boolean loginAdmin(Scanner saisie) {
+        System.out.println("\n\t##########################################");
+        System.out.println("\t#         Connexion Administrateur       #");
+        System.out.println("\t##########################################");
+        System.out.print("\t# Login : ");
+        String login = saisie.nextLine();
+
+        System.out.print("\t# Mot de passe : ");
+        String password = saisie.nextLine();
+        System.out.println("\t##########################################");
+
+
+        if (ADMIN_LOGIN.equals(login) && ADMIN_PASSWORD.equals(password)) {
+            System.out.println("✅ Connexion réussie. Bienvenue, " + login + " !");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /*private static void gestionBanquesMenu(Scanner saisie, BankService bankService) {
         while (true) {
             System.out.println("\n\t##########################################");
             System.out.println("\t#          GESTION DES BANQUES           #");
@@ -148,6 +186,6 @@ public class App
                 System.out.println(bank.getName() + " - " + bank.getCountry() + ", " + bank.getCity());
             }
         }
-    }
+    }*/
 }
 
