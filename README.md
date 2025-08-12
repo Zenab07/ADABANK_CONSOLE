@@ -65,6 +65,7 @@ Avant de démarrer, assurez-vous d'avoir :
 
    
    ```java
+
    private static final String URL = "jdbc:postgresql://localhost:5432/adabank_db?currentSchema=public&sslmode=disable";
    private static final String USER = "postgre";
    private static final String PASSWORD = "password";
